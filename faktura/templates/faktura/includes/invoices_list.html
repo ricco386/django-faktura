@@ -1,0 +1,33 @@
+{% if object_list %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">{{ _('Invoice number') }}</th>
+            <th scope="col">{{ _('Date of issue') }}</th>
+            <th scope="col">{{ _('Due date') }}</th>
+            <th scope="col">{{ _('Customer') }}</th>
+            <th scope="col">{{ _('Status') }}</th>
+            <th scope="col">{{ _('Total amount') }}</th>
+            <th scope="col">{{ _('Currency') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for invoice in object_list %}
+            <tr>
+                <th scope="row"><a href="{% url 'detail' invoice.id %}">{{ invoice.number }}</a></th>
+                <td>{{ invoice.date_of_issue }}</td>
+                <td>{{ invoice.due_date }}</td>
+                <td>{{ invoice.buyer }}</td>
+                <td>{{ invoice.get_status_display }}</td>
+                <td>{{ invoice.total_amount|floatformat:2 }}</td>
+                <td>{{ invoice.currency }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'faktura/includes/pagination.html' %}
+
+{% else %}
+    <p>{{ _('No invoices found!') }}</p>
+{% endif %}

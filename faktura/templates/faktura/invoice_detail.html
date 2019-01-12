@@ -1,0 +1,209 @@
+{% extends "faktura/base.html" %}
+
+{% block navigation %}
+
+    {% if not generating_pdf %}
+    <div class="row">
+        <div class="col">
+            <h2>{{ object.get_type_display }} {{ object.number }}</h2>
+            <a href="{% url 'list' %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ _('All') }}</a>
+            {% for year in invoice_years %}
+                <a href="{% url 'year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            {{ object.get_type_display }}
+
+            {% if not generating_pdf %}
+                ({{ _('created by') }}: {{ object.author }})
+            {% endif %}
+
+            <span class="float-right"> <strong>Status:</strong> {{ object.get_status_display }}</span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-6 mb-5">
+                    <strong>{{ object.get_type_display }}</strong><br/>
+
+                    {{ object.get_type_display }} {{ _('number') }}: {{ object.number }}<br/>
+
+                    {% if not generating_pdf and object.invoice %}
+                        {{ _('Related invoice number') }}:
+                        <a href="{% url 'detail' object.invoice.id %}">{{ object.invoice.number }}</a><br/>
+                    {% endif %}
+
+                    {{ _('Issue date') }}: {{ object.date_of_issue }}<br/>
+                    {{ _('Due date') }}: {{ object.due_date }}
+
+                    {% if not object.includes_vat %}
+                        <br/>{{ _('We are not VAT payers.') }}
+                    {% endif %}
+                </div>
+                <div class="col-6 mb-5">
+                    <img class="float-right" src="https://2019.pycon.sk/static/images/pycon_logo_square_60x60.png"/>
+                </div>
+
+                <div class="col-6">
+                    <h6 class="mb-3">{{ _('From') }}: <strong>{{ object.seller }}</strong></h6>
+                    <div>
+                        {{ object.seller_details|linebreaksbr }}
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <h6 class="mb-3">{{ _('To') }}: <strong>{{ object.buyer }}</strong></h6>
+                    <div>
+                        {{ object.buyer_details|linebreaksbr }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">{{ _('Item') }}</th>
+                        <th scope="col">{{ _('Quantity') }}</th>
+                        <th scope="col">{{ _('Unit price') }}</th>
+                        <th scope="col"><span class="float-right">{{ _('Total') }}</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in object.items.all %}
+                        <tr>
+                            <td scope="row">{{ item.title|linebreaksbr }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.price|floatformat:2 }}</td>
+                            <td>
+                                <span class="float-right">
+                                    {{ item.total_amount|floatformat:2 }} {{ object.currency }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-7"></div>
+
+                <div class="col-5">
+                    <table class="table table-clear">
+                        <tbody>
+                        {% if object.includes_vat %}
+                            <tr>
+                                <td>
+                                    <strong>{{ _('VAT') }} ({{ object.vat }}%)</strong>
+                                </td>
+                                <td>
+                                <span class="float-right">
+                                    {{ object.items_vat|floatformat:2 }} {{ object.currency }}
+                                </span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>
+                                <strong>{{ _('Subtotal') }}</strong>
+                            </td>
+                            <td>
+                                <span class="float-right">
+                                    {{ object.items_total_with_vat|floatformat:2 }} {{ object.currency }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% if object.discount %}
+                            <tr>
+                                <td>
+                                    <strong>{{ _('Discount') }} ({{ object.discount }}%)</strong>
+                                </td>
+                                <td>
+                                <span class="float-right">
+                                    {{ object.items_discount|floatformat:2 }} {{ object.currency }}
+                                </span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>
+                                <strong>
+                                    {% if invoice_for_proforma %}
+                                        {{ _('Total paid') }}
+                                    {% else %}
+                                        {{ _('Total') }}
+                                    {% endif %}
+                                </strong>
+                            </td>
+                            <td>
+                                <span class="float-right">
+                                    <strong>{{ object.total_amount|floatformat:2 }} {{ object.currency }}</strong>
+                                </span>
+                            </td>
+                        </tr>
+                        {% if invoice_for_proforma %}
+                            <tr>
+                                <td>
+                                    <strong>{{ _('To be paid') }}</strong>
+                                </td>
+                                <td>
+                                <span class="float-right">
+                                    <strong>0 {{ object.currency }}</strong>
+                                </span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% if invoice_for_proforma or object.note %}
+                <hr/>
+            {% endif %}
+
+            {% if invoice_for_proforma %}
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        {{ _('Invoice is a billing of the pro forma invoice:') }}
+                        {% for i in object.proforma.all %}
+                            {% if generating_pdf %}
+                                {{ i.number }}
+                            {% else %}
+                                <a href="{% url 'detail' i.id %}">{{ i.number }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        <strong class="float-right">{{ _('Do not pay this tax document.') }}</strong>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if object.note %}
+                <div class="row">
+                    <div class="col-12">
+                        {{ object.note|linebreaksbr }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if not generating_pdf %}
+                <hr/>
+                <div class="row">
+                    <div class="col-12 mt-3">
+                        <a href="{% url 'list' %}" role="button"
+                           class="btn btn-outline-dark btn-lg float-left">{{ _('List invoices') }}</a>
+                        <a href="{% url 'pdf' object.id %}" role="button"
+                           class="btn btn-outline-primary btn-lg float-right">{{ _('Download PDF') }}</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

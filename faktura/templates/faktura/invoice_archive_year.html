@@ -1,0 +1,17 @@
+{% extends "faktura/base.html" %}
+
+{% block navigation %}
+    <div class="row">
+        <div class="col">
+            <h2>{{ _('Issued invoices in year:') }} {{ year|date:"Y" }}</h2>
+            <a href="{% url 'list' %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ _('All') }}</a>
+            {% for year in invoice_years %}
+                <a href="{% url 'year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% include 'faktura/includes/invoices_list.html' %}
+{% endblock %}
