@@ -1,13 +1,11 @@
 # Config file for automatic testing at travis-ci.org
+dist: xenial
 sudo: false
 
 language: python
-
 python:
-  - "3.5"
   - "3.6"
   - "3.7"
-
 env:
   - DJANGO_VERSION=1.11.18
   - DJANGO_VERSION=2.0.10
