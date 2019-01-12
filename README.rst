@@ -5,10 +5,14 @@ Faktura
 .. image:: https://img.shields.io/pypi/pyversions/django-faktura.svg
    :target: https://pypi.org/project/django-faktura/
 
+.. image:: https://codebeat.co/badges/76c75008-f8a2-4ace-8ec4-c4f1b9183c6c
+   :target: https://codebeat.co/projects/github-com-ricco386-django-faktura-master
+
 .. image:: https://travis-ci.com/ricco386/django-faktura.svg?branch=master
    :target: https://travis-ci.com/ricco386/django-faktura
 
 .. image:: https://img.shields.io/github/license/ricco386/django-faktura.svg
+   :target: https://github.com/ricco386/django-faktura/blob/master/LICENSE
 
 Faktura is a simple Django app to conduct Web-based invoice generation and evidence.
 
