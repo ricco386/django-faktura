@@ -6,6 +6,4 @@ It is not used by installed instances of this app.
 """
 from django.urls import include, path
 
-urlpatterns = [
-    path('invoices/', include('faktura.urls')),
-]
+urlpatterns = [path("invoices/", include("faktura.urls"))]

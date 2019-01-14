@@ -55,11 +55,15 @@ def test_invoice_status_save(django_user_model):
     )
     i2.save()
     assert i.number is None  # Storing as a draft does note generate invoice number
-    assert i2.number == f"001/{current_year}"  # Default format for invoice number generation
+    assert (
+        i2.number == f"001/{current_year}"
+    )  # Default format for invoice number generation
 
     i.status = Invoice.FINAL
     i.save()
-    assert i.number == f"002/{current_year}"  # Invoice was changed from DRAFT to FINAL, number has been generated.
+    assert (
+        i.number == f"002/{current_year}"
+    )  # Invoice was changed from DRAFT to FINAL, number has been generated.
 
     i3 = Invoice(
         seller="XYZ",
