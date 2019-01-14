@@ -1,9 +1,9 @@
 import uuid
 
+from datetime import date, timedelta
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
-from datetime import date, timedelta
 
 from .settings import (
     DEFAULT_DUE_DATE,
@@ -65,6 +65,9 @@ class Invoice(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        permissions = (
+            ("can_mark_invoice_as_final", 'Can mark invoice as "Final document"'),
+        )
         ordering = ["-date_of_issue", "-number"]
 
     def __str__(self):

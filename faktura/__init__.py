@@ -7,3 +7,5 @@ See the LICENSE file for copying permission.
 
 __version__ = "0.1"
 __author__ = "Richard Kellner"
+
+default_app_config = "faktura.apps.FakturaConfig"
