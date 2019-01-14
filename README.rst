@@ -19,10 +19,15 @@ Faktura is a simple Django app to conduct Web-based invoice generation and evide
 Quick start
 -----------
 
+1. Install django-faktura via pip::
+
+   pip install django-faktura
+
 1. Add "faktura" to your INSTALLED_APPS setting like this::
 
     INSTALLED_APPS = [
         ...
+        'wkhtmltopdf',  # Dependency for PDF generation
         'faktura',
     ]
 
