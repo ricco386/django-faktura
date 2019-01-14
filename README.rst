@@ -38,7 +38,7 @@ Quick start
 5. Visit http://127.0.0.1:8000/invoices/ to view the invoices list.
 
 Support
------
+-------
 
 I did this app because SPy o.z. (non profit supporting Slovak Python community) needed
 something for invoice evidence. I like to program and I wanted to try design a clean 
@@ -46,8 +46,11 @@ Django app and learn one or two things about testing stand alone app and packagi
 
 If you like what I do (stuff like this django app, or my role in community), you can buy me a coffee:
 
-.. image:: https://img.shields.io/badge/Donate-PayPal-green.svg
+.. image:: https://img.shields.io/badge/Donate-PayPal-blue.svg
    :target: https://paypal.me/ricco386
+
+.. image:: https://img.shields.io/badge/Donate-bitcoin-blue.svg
+   :target: https://tallyco.in/RicCo386/
 
 If you use this app for your business consider makeing a recurent donation:
 
