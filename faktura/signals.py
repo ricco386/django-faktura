@@ -6,9 +6,8 @@ def populate_models(sender, **kwargs):
     from django.db.models import Q
 
     group_managers, created = Group.objects.get_or_create(name="Invoicing managers")
-    models = apps.all_models[FakturaConfig.name]
 
-    for model in models:
+    for model in apps.all_models[FakturaConfig.name]:
         content_type = ContentType.objects.get(
             app_label=FakturaConfig.name, model=model
         )
