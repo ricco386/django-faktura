@@ -5,7 +5,7 @@ Faktura
 .. image:: https://img.shields.io/pypi/pyversions/django-faktura.svg
    :target: https://pypi.org/project/django-faktura/
 
-.. image:: https://codebeat.co/badges/76c75008-f8a2-4ace-8ec4-c4f1b9183c6c
+.. image:: https://codebeat.co/badges/2d56dde1-436c-4d31-81ca-108412aa417c
    :target: https://codebeat.co/projects/github-com-ricco386-django-faktura-master
 
 .. image:: https://travis-ci.com/ricco386/django-faktura.svg?branch=master
@@ -42,6 +42,22 @@ Quick start
 
 5. Visit http://127.0.0.1:8000/invoices/ to view the invoices list.
 
+Testing
+-------
+
+In order to run tests execute command::
+
+     python setup.py test
+
+We do have additional requirements for running tests in multiple Python and Django
+environments via TOX. Install them (into your virtualenv)::
+
+     pip install -r requirements-test.txt
+
+To run complex test suite via TOX, execute command::
+
+     tox
+
 Support
 -------
 
@@ -49,7 +65,8 @@ I did this app because SPy o.z. (non profit supporting Slovak Python community) 
 something for invoice evidence. I like to program and I wanted to try design a clean 
 Django app and learn one or two things about testing stand alone app and packaging.
 
-If you like what I do (stuff like this django app, or my role in community), you can buy me a coffee:
+If you like what I do (stuff like this django app, or my role in community), you can buy
+me a coffee:
 
 .. image:: https://img.shields.io/badge/Donate-PayPal-blue.svg
    :target: https://paypal.me/ricco386
