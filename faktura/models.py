@@ -103,8 +103,9 @@ class Invoice(models.Model):
 
     def save(self, *args, **kwargs):
         if self.invoice and self.type == Invoice.INVOICE:
-            # Only pro forma invoice or credit note can have link to proper invoice!
-            raise ValueError
+            raise ValueError(
+                "It is not possible to generate invoice from invoice! Provide pro forma invoice or credit note."
+            )
 
         if self.status == self.FINAL and self.number is None:
             year = self.date_of_issue.year

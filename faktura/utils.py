@@ -1,4 +1,5 @@
 import datetime
+from copy import deepcopy
 
 from .models import Invoice
 
@@ -10,20 +11,21 @@ def clone_invoice(invoice):
     :param invoice:
     :return: Newly cloned invoice (draft)
     """
-    items = invoice.items.all()
+    clone = deepcopy(invoice)
 
-    invoice.pk = None
-    invoice.number = None
-    invoice.status = Invoice.DRAFT
-    invoice.invoice = None
-    invoice.save()
+    clone.pk = None
+    clone.number = None
+    clone.status = Invoice.DRAFT
+    clone.invoice = None
+    clone.save()
 
-    for item in items:
-        item.pk = None
-        item.invoice = invoice
-        item.save()
+    for item in invoice.items.all():
+        clone_item = deepcopy(item)
+        clone_item.pk = None
+        clone_item.invoice = clone
+        clone_item.save()
 
-    return invoice
+    return clone
 
 
 def generate_invoice(proforma_invoice):
