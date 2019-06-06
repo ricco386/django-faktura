@@ -10,6 +10,10 @@ def make_invoices_final(modeladmin, request, queryset):
     queryset.update(status=Invoice.FINAL)
 
 
+def make_invoices_draft(modeladmin, request, queryset):
+    queryset.update(status=Invoice.DRAFT)
+
+
 def clone_invoices(modeladmin, request, queryset):
     for invoice in queryset.all():
         clone_invoice(invoice)
@@ -21,6 +25,7 @@ def generate_invoices(modeladmin, request, queryset):
 
 
 make_invoices_final.short_description = _("Mark selected Invoices as final document")
+make_invoices_draft.short_description = _("Mark selected Invoices as draft")
 clone_invoices.short_description = _("Clone selected Invoices (save as drafts)")
 generate_invoices.short_description = _(
     "Generate Invoices for selected pro forma Invoices"
@@ -106,7 +111,7 @@ class AuthorAdmin(admin.ModelAdmin):
         ),
     )
     inlines = (ItemInlineAdmin,)
-    actions = (make_invoices_final, clone_invoices)
+    actions = (make_invoices_draft, make_invoices_final, clone_invoices)
 
     def has_delete_permission(self, request, obj=None):
         if obj and obj.status == Invoice.FINAL:
@@ -140,6 +145,7 @@ class AuthorAdmin(admin.ModelAdmin):
             return self.readonly_fields + (
                 "number",
                 "type",
+                "status",
                 "date_of_issue",
                 "due_date",
                 "buyer",
