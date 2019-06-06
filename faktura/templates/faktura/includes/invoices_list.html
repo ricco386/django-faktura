@@ -1,5 +1,5 @@
 {% if object_list %}
-    <table class="table">
+    <table id="invoices" class="table table-striped table-bordered"">
         <thead>
         <tr>
             <th scope="col">{{ _('Invoice number') }}</th>
@@ -15,8 +15,8 @@
         {% for invoice in object_list %}
             <tr>
                 <th scope="row"><a href="{% url 'detail' invoice.id %}">{{ invoice.number }}</a></th>
-                <td>{{ invoice.date_of_issue }}</td>
-                <td>{{ invoice.due_date }}</td>
+                <td>{{ invoice.date_of_issue|date:"Y-m-d" }}</td>
+                <td>{{ invoice.due_date|date:"Y-m-d" }}</td>
                 <td>{{ invoice.buyer }}</td>
                 <td>{{ invoice.get_status_display }}</td>
                 <td>{{ invoice.total_amount|floatformat:2 }}</td>
