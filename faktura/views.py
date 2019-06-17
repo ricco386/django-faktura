@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 from django.views.generic.dates import YearArchiveView
 from django.shortcuts import redirect
@@ -14,7 +15,7 @@ from .utils import get_invoice_years
 logger = logging.getLogger(__name__)
 
 
-class InvoiceListView(ListView):
+class InvoiceListView(LoginRequiredMixin, ListView):
     model = Invoice
     paginate_by = 10
 
