@@ -10,6 +10,9 @@
             {% for year in invoice_years %}
                 <a href="{% url 'year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
             {% endfor %}
+            {% if user.is_authenticated %}
+                <a href="{% url "logout" %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2 float-right">Logout</a>
+            {% endif %}
         </div>
     </div>
     {% endif %}
