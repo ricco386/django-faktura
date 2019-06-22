@@ -26,7 +26,7 @@ class InvoiceListView(LoginRequiredMixin, ListView):
         return context
 
 
-class InvoiceYearArchiveView(YearArchiveView):
+class InvoiceYearArchiveView(LoginRequiredMixin, YearArchiveView):
     queryset = Invoice.objects.all()
     date_field = "date_of_issue"
     make_object_list = True
@@ -40,7 +40,7 @@ class InvoiceYearArchiveView(YearArchiveView):
         return context
 
 
-class InvoiceDetailView(DetailView):
+class InvoiceDetailView(LoginRequiredMixin, DetailView):
     model = Invoice
 
     def get_context_data(self, **kwargs):
