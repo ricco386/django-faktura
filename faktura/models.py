@@ -99,7 +99,7 @@ class Invoice(models.Model):
 
     @property
     def total_amount(self):
-        return self.items_total_with_vat - self.items_discount
+        return round(self.items_total_with_vat - self.items_discount, 2)
 
     def save(self, *args, **kwargs):
         if self.invoice and self.type == Invoice.INVOICE:
