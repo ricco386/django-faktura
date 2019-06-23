@@ -4,7 +4,12 @@ Django project (Django expects ROOT_URLCONF to exist.)
 
 It is not used by installed instances of this app.
 """
-from django.urls import include, path
+import django
+
+if django.get_version()[0] == '2':
+    from django.urls import include, path
+else:
+    from django.conf.urls import include, url as path
 
 urlpatterns = [
     path("invoices/", include("faktura.urls")),

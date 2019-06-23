@@ -1,10 +1,16 @@
-from django.urls import path
+import django
+
 from .views import (
     InvoiceListView,
     InvoiceYearArchiveView,
     InvoiceDetailView,
     InvoiceDetailPDFView,
 )
+
+if django.get_version()[0] == '2':
+    from django.urls import path
+else:
+    from django.conf.urls import url as path
 
 
 urlpatterns = [
