@@ -20,6 +20,13 @@ from .settings import (
 def get_due_date():
     return date.today() + timedelta(days=DEFAULT_DUE_DATE)
 
+class InvoiceManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related('invoice', 'author').prefetch_related('items')
 
 class Invoice(models.Model):
     DRAFT = "draft"
@@ -33,6 +40,7 @@ class Invoice(models.Model):
         (PROFORMA, _("Pro forma Invoice")),
         (CREDIT, _("Credit note")),
     )
+    objects = InvoiceManager()
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     number = models.CharField(_("Invoice number"), max_length=10, null=True, blank=True)
