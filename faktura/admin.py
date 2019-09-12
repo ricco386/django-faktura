@@ -3,7 +3,7 @@ from django.utils.translation import gettext as _
 
 from .models import Invoice, Item
 from .settings import DEFAULT_SELLER, DEFAULT_SELLER_DETAILS, DEFAULT_NOTE
-from .utils import clone_invoice
+from .utils import clone_invoice, generate_invoice
 
 
 def make_invoices_final(modeladmin, request, queryset):
@@ -21,7 +21,7 @@ def clone_invoices(modeladmin, request, queryset):
 
 def generate_invoices(modeladmin, request, queryset):
     for invoice in queryset.all():
-        clone_invoice(invoice)
+        generate_invoice(invoice)
 
 
 make_invoices_final.short_description = _("Mark selected Invoices as final document")
@@ -111,7 +111,7 @@ class AuthorAdmin(admin.ModelAdmin):
         ),
     )
     inlines = (ItemInlineAdmin,)
-    actions = (make_invoices_draft, make_invoices_final, clone_invoices)
+    actions = (make_invoices_draft, make_invoices_final, clone_invoices, generate_invoices)
 
     def has_delete_permission(self, request, obj=None):
         if obj and obj.status == Invoice.FINAL:
