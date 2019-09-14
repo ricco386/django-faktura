@@ -8,7 +8,7 @@ LOGIN_URL = getattr(settings, 'LOGIN_URL', '@nonsense@')
 
 @pytest.mark.django_db
 def test_invoice_list_authentication(client, django_user_model):
-    response = client.get(reverse('list'))
+    response = client.get(reverse('faktura:list'))
     assert response.url.startswith(LOGIN_URL)
     assert response.status_code == 302
 
@@ -19,5 +19,5 @@ def test_invoice_list_authentication(client, django_user_model):
 
     client.login(username='john', password='123456')
 
-    response = client.get(reverse('list'))
+    response = client.get(reverse('faktura:list'))
     assert response.status_code == 200

@@ -10,9 +10,9 @@
     <div class="row">
         <div class="col">
             <h2>{{ _('All issued invoices') }}</h2>
-            <a href="{% url 'list' %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ _('All') }}</a>
+            <a href="{% url 'faktura:list' %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ _('All') }}</a>
             {% for year in invoice_years %}
-                <a href="{% url 'year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
+                <a href="{% url 'faktura:year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
             {% endfor %}
             {% if user.is_authenticated %}
                 <a href="{% url "logout" %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2 float-right">Logout</a>

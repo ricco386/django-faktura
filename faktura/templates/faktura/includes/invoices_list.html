@@ -14,7 +14,7 @@
         <tbody>
         {% for invoice in object_list %}
             <tr>
-                <th scope="row"><a href="{% url 'detail' invoice.id %}">{{ invoice.number }}</a></th>
+                <th scope="row"><a href="{% url 'faktura:detail' invoice.id %}">{{ invoice.number }}</a></th>
                 <td>{{ invoice.date_of_issue|date:"Y-m-d" }}</td>
                 <td>{{ invoice.due_date|date:"Y-m-d" }}</td>
                 <td>{{ invoice.buyer }}</td>

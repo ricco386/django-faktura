@@ -12,6 +12,7 @@ if django.get_version()[0] == '2':
 else:
     from django.conf.urls import url as path
 
+app_name = 'faktura'
 
 urlpatterns = [
     path("<uuid:pk>/download/", InvoiceDetailPDFView.as_view(), name="pdf"),

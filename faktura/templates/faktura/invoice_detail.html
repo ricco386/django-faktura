@@ -6,9 +6,9 @@
     <div class="row">
         <div class="col">
             <h2>{{ object.get_type_display }} {{ object.number }}</h2>
-            <a href="{% url 'list' %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ _('All') }}</a>
+            <a href="{% url 'faktura:list' %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ _('All') }}</a>
             {% for year in invoice_years %}
-                <a href="{% url 'year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
+                <a href="{% url 'faktura:year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
             {% endfor %}
             {% if user.is_authenticated %}
                 <a href="{% url "logout" %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2 float-right">Logout</a>
@@ -39,7 +39,7 @@
 
                     {% if not generating_pdf and object.invoice %}
                         {{ _('Related invoice number') }}:
-                        <a href="{% url 'detail' object.invoice.id %}">{{ object.invoice.number }}</a><br/>
+                        <a href="{% url 'faktura:detail' object.invoice.id %}">{{ object.invoice.number }}</a><br/>
                     {% endif %}
 
                     {{ _('Issue date') }}: {{ object.date_of_issue }}<br/>
@@ -200,9 +200,9 @@
                 <hr/>
                 <div class="row">
                     <div class="col-12 mt-3">
-                        <a href="{% url 'list' %}" role="button"
+                        <a href="{% url 'faktura:list' %}" role="button"
                            class="btn btn-outline-dark btn-lg float-left">{{ _('List invoices') }}</a>
-                        <a href="{% url 'pdf' object.id %}" role="button"
+                        <a href="{% url 'faktura:pdf' object.id %}" role="button"
                            class="btn btn-outline-primary btn-lg float-right">{{ _('Download PDF') }}</a>
                     </div>
                 </div>
