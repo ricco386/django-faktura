@@ -6,21 +6,6 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 {% endblock %}
 
-{% block navigation %}
-    <div class="row">
-        <div class="col">
-            <h2>{{ _('Issued invoices in year:') }} {{ year|date:"Y" }}</h2>
-            <a href="{% url 'faktura:list' %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ _('All') }}</a>
-            {% for year in invoice_years %}
-                <a href="{% url 'faktura:year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
-            {% endfor %}
-            {% if user.is_authenticated %}
-                <a href="{% url "logout" %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2 float-right">Logout</a>
-            {% endif %}
-        </div>
-    </div>
-{% endblock %}
-
 {% block content %}
     {% include 'faktura/includes/invoices_list.html' %}
 {% endblock %}

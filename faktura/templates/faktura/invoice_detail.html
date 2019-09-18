@@ -1,31 +1,12 @@
 {% extends "faktura/base.html" %}
 
-{% block navigation %}
-
-    {% if not generating_pdf %}
-    <div class="row">
-        <div class="col">
-            <h2>{{ object.get_type_display }} {{ object.number }}</h2>
-            <a href="{% url 'faktura:list' %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ _('All') }}</a>
-            {% for year in invoice_years %}
-                <a href="{% url 'faktura:year_archive' year %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2">{{ year }}</a>
-            {% endfor %}
-            {% if user.is_authenticated %}
-                <a href="{% url "logout" %}" role="button" class="btn btn-outline-dark btn-sm float-left mb-2 float-right">Logout</a>
-            {% endif %}
-        </div>
-    </div>
-    {% endif %}
-
-{% endblock %}
-
 {% block content %}
     <div class="card">
         <div class="card-header">
-            {{ object.get_type_display }}
+            {{ object.get_type_display }} {{ object.number }}
 
             {% if not generating_pdf %}
-                ({{ _('created by') }}: {{ object.author }})
+                <small>({{ _('created by') }}: {{ object.author }})</small>
             {% endif %}
 
             <span class="float-right"> <strong>Status:</strong> {{ object.get_status_display }}</span>

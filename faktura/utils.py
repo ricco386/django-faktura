@@ -37,8 +37,7 @@ def generate_invoice(proforma_invoice):
     """
     if proforma_invoice.type == Invoice.INVOICE:
         raise ValueError(
-            "It is not possible to generate invoice from invoice! Provide pro forma invoice or credit "
-            "note."
+            "It is not possible to generate invoice from invoice! Provide pro forma invoice or credit note."
         )
 
     invoice = clone_invoice(proforma_invoice)
