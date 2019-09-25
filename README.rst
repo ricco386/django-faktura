@@ -65,6 +65,9 @@ I did this app because SPy o.z. (non profit supporting Slovak Python community) 
 something for invoice evidence. I like to program and I wanted to try design a clean 
 Django app and learn one or two things about testing stand alone app and packaging.
 
+You can use my refferal link: https://m.do.co/c/18b211fa1d99 and create account with 
+Digital Ocean and get $50 credit, and you'll help me out to cover my hosting costs.
+
 If you like what I do (stuff like this django app, or my role in community), you can buy
 me a coffee:
 
