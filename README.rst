@@ -16,6 +16,13 @@ Faktura
 
 Faktura is a simple Django app to conduct Web-based invoice generation and evidence.
 
+Dependencies
+------------
+
+For generating PDF we use https://wkhtmltopdf.org/ package. Make sure you have installed it in your OS.
+Package installation will also download and install https://github.com/incuna/django-wkhtmltopdf.
+
+
 Quick start
 -----------
 
@@ -41,6 +48,13 @@ Quick start
    to manage your invoices (you'll need the Admin app enabled).
 
 5. Visit http://127.0.0.1:8000/invoices/ to view the invoices list.
+
+Settings
+--------
+
+In order to generate invoice PDF with `wkhtmltopdf`, make sure your project has `STATIC_ROOT` set.
+If `STATIC_ROOT` is not set PDF generation will fail with `AttributeError` (#15).
+
 
 Testing
 -------
