@@ -1,3 +1,4 @@
+django
 django-wkhtmltopdf
 tox
 flake8
