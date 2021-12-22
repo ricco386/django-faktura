@@ -1,4 +1,5 @@
 import django
+from django.urls import path
 
 from .views import (
     InvoiceListView,
@@ -6,11 +7,6 @@ from .views import (
     InvoiceDetailView,
     InvoiceDetailPDFView,
 )
-
-if django.get_version()[0] == '2':
-    from django.urls import path
-else:
-    from django.conf.urls import url as path
 
 app_name = 'faktura'
 

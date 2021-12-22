@@ -1,4 +1,6 @@
 {% extends "faktura/base.html" %}
+{% load i18n %}
+{% load static %}
 
 {% block content %}
     <div class="card">
@@ -23,7 +25,12 @@
                         <a href="{% url 'faktura:detail' object.invoice.id %}">{{ object.invoice.number }}</a><br/>
                     {% endif %}
 
-                    {{ _('Issue date') }}: {{ object.date_of_issue }}<br/>
+                    {% for i in object.proforma.all %}
+                        {{ _('Related pre invoice number') }}:
+                        <a href="{% url 'faktura:detail' i.id %}">{{ i.number }}</a><br/>
+                    {% endfor %}
+
+                    {% translate 'Issue date' %}: {{ object.date_of_issue }}<br/>
                     {{ _('Due date') }}: {{ object.due_date }}
 
                     {% if not object.includes_vat %}
