@@ -1,5 +1,6 @@
 from django.conf import settings
 
+DEFAULT_ACCOUNT = "Cash Register"
 
 DEFAULT_DUE_DATE = getattr(settings, "DEFAULT_DUE_DATE", 14)
 DEFAULT_STATUS = getattr(settings, "DEFAULT_STATUS", "draft")
@@ -19,3 +20,5 @@ DEFAULT_DISCOUNT = getattr(settings, "DEFAULT_DISCOUNT", 0)
 DEFAULT_NOTE = getattr(settings, "DEFAULT_NOTE", None)
 
 DEFAULT_ITEM_QUANTITY = getattr(settings, "DEFAULT_ITEM_QUANTITY", 1)
+
+MAX_FILE_SIZE_UPLOAD = getattr(settings, "MAX_FILE_SIZE_UPLOAD", 10)

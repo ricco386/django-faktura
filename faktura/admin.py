@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from .models import Invoice, Item
+from .models import Invoice, Item, Account, Transaction, Document
 from .settings import DEFAULT_SELLER, DEFAULT_SELLER_DETAILS, DEFAULT_NOTE
 from .utils import clone_invoice, generate_invoice
 
@@ -62,7 +62,7 @@ class ItemInlineAdmin(admin.TabularInline):
 
 
 @admin.register(Invoice)
-class AuthorAdmin(admin.ModelAdmin):
+class InvoiceAdmin(admin.ModelAdmin):
     list_display = (
         "number",
         "type",
@@ -164,3 +164,113 @@ class AuthorAdmin(admin.ModelAdmin):
             )
 
         return self.readonly_fields
+
+
+class TransactionInlineAdmin(admin.TabularInline):
+    model = Transaction
+    extra = 1
+    fields = ("title", "date", "type", "amount", "currency", "link",)
+
+
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    readonly_fields = ("id",)
+    inlines = (TransactionInlineAdmin,)
+    fieldsets = (
+        (
+            _("Transaction"),
+            {"fields": ("title",)},
+        ),
+        (
+            _("Metadata"),
+            {
+                "fields": ("description", "metadata",),
+                "classes": ("collapse",),
+            },
+        ),
+    )
+
+
+class DocumentInlineAdmin(admin.StackedInline):
+    model = Document
+    extra = 0
+    fieldsets = (
+        (
+            _("Document"),
+            {"fields": ("title",)},
+        ),
+        (
+            _("Document details"),
+            {"fields": ("data", "invoice",)},
+        ),
+        (
+            _("Metadata"),
+            {
+                "fields": ("description", "metadata",),
+                "classes": ("collapse",),
+            },
+        ),
+    )
+
+
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = (
+        "date",
+        "type",
+        "title",
+        "account",
+        "amount",
+        "currency",
+    )
+    search_fields = ("title", "amount")
+    list_filter = ("date", "type", "account", "currency")
+    ordering = ("-date", "-currency", "type", )
+    readonly_fields = ("id", "created_at", "updated_at")
+    inlines = (DocumentInlineAdmin,)
+    fieldsets = (
+        (
+            _("Transaction"),
+            {"fields": ("title",)},
+        ),
+        (
+            _("Transaction details"),
+            {"fields": ("date", "type", "amount", "currency", "account")},
+        ),
+        (
+            _("Metadata"),
+            {
+                "fields": ("description", "link", "metadata",),
+                "classes": ("collapse",),
+            },
+        ),
+        (
+            _("Modifications"),
+            {
+                "fields": ("created_at", "updated_at", "id"),
+                "classes": ("collapse",),
+            },
+        ),
+    )
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    readonly_fields = ("id",)
+    fieldsets = (
+        (
+            _("Document"),
+            {"fields": ("title",)},
+        ),
+        (
+            _("Document details"),
+            {"fields": ("data", "invoice",)},
+        ),
+        (
+            _("Metadata"),
+            {
+                "fields": ("description", "metadata",),
+                "classes": ("collapse",),
+            },
+        ),
+    )

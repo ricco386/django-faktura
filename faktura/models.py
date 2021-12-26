@@ -2,8 +2,10 @@ import uuid
 
 from datetime import date, timedelta
 from django.conf import settings
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext as _
+from faktura.validators import FileSizeValidator
 
 from .settings import (
     DEFAULT_DUE_DATE,
@@ -14,11 +16,13 @@ from .settings import (
     DEFAULT_CURRENCY,
     DEFAULT_DISCOUNT,
     DEFAULT_ITEM_QUANTITY,
+    MAX_FILE_SIZE_UPLOAD,
+    DEFAULT_ACCOUNT,
 )
-
 
 def get_due_date():
     return date.today() + timedelta(days=DEFAULT_DUE_DATE)
+
 
 class InvoiceManager(models.Manager):
     """
@@ -27,6 +31,7 @@ class InvoiceManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.select_related('invoice', 'author').prefetch_related('items')
+
 
 class Invoice(models.Model):
     DRAFT = "draft"
@@ -153,3 +158,112 @@ class Item(models.Model):
     @property
     def total_amount(self):
         return self.price * self.quantity
+
+
+class Account(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(_("Title"), max_length=255)
+    description = models.TextField(_("Description"), null=True, blank=True)
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about Account.")
+    )
+
+    def __str__(self):
+        return self.title
+
+
+def get_default_account():
+    return Account.objects.get(title=DEFAULT_ACCOUNT)
+
+
+class Transaction(models.Model):
+    INCOME = 'income'
+    EXPENSE = 'expense'
+    ASSET = 'asset'
+    LIABILITY = 'liability'
+    TYPES_CHOICES = (
+        (INCOME, _("Income")),
+        (EXPENSE, _("Expense")),
+        (ASSET, _("Asset")),
+        (LIABILITY, _("Liability"))
+    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    date = models.DateField(_("Date"))
+    title = models.CharField(_("Title"), max_length=255, null=True, blank=True)
+    description = models.TextField(_("Description"), null=True, blank=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, default=get_default_account)
+    type = type = models.CharField(_("Type"), max_length=12, choices=TYPES_CHOICES, default=EXPENSE)
+    amount = models.FloatField(_("Amount"))
+    currency = models.CharField(_("Currency"), default=DEFAULT_CURRENCY, max_length=4)
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about transaction.")
+    )
+    link = models.ForeignKey(
+        "self", verbose_name=_("Related transaction"), blank=True, null=True, on_delete=models.SET_NULL
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.date}: {self.amount} {self.currency} ({self.type})"
+
+    def save(self, *args, **kwargs):
+        if self.type == self.EXPENSE and self.amount > 0:
+            self.amount = -abs(self.amount)
+
+        super().save(*args, **kwargs)
+
+
+class Document(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(_("Title"), max_length=255, null=True, blank=True)
+    description = models.TextField(_("Description"), null=True, blank=True)
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about document.")
+    )
+    data = models.FileField(
+        verbose_name=_("Data"),
+        blank=True,
+        null=True,
+        upload_to="accounting",
+        help_text=_("Upload proof of your work " "(document, video, image)."),
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "png", "pdf", "doc", "docx", "txt", "xls", "xlsx"]),
+            FileSizeValidator(MAX_FILE_SIZE_UPLOAD),
+        ],
+    )
+    invoice = models.ForeignKey(
+        Invoice,
+        on_delete=models.CASCADE,
+        related_name="transactions",
+        related_query_name="transaction",
+        blank=True,
+        null=True,
+    )
+    transaction = models.ForeignKey(
+        Transaction,
+        on_delete=models.CASCADE,
+        related_name="documents",
+        related_query_name="document",
+    )
+
+    def __str__(self):
+        name = ''
+
+        if self.title:
+            name = self.title
+        elif self.invoice:
+            name = _('Invoice')
+        elif self.data:
+            name = _('Document')
+
+        return str(self.transaction) + " -> " + name
+
+    def save(self, *args, **kwargs):
+        if self.title == '' or self.title is None:
+            if self.data:
+                self.title = str(self.data)
+            elif self.invoice:
+                self.title = str(self.invoice)
+
+        super().save(*args, **kwargs)
